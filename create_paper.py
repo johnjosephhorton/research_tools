@@ -122,7 +122,9 @@ def main():
 
     if options.run_r:
         os.chdir(os.path.join(os.getcwd(), "code/R/"))
-        r_process = subprocess.Popen(['Rscript', 'analysis.R'], shell=False, stdout=subprocess.PIPE)
+        r_process = subprocess.Popen(['Rscript', 'analysis.R'], 
+                                     shell=False, 
+                                     stdout=subprocess.PIPE)
         flush = r_process.communicate()[0]
     
     num_dirs = 0
@@ -145,14 +147,16 @@ def main():
         print "Doing a %s iteration" % op 
         
         if op is 'p':
-            pdftex_process = subprocess.Popen(['pdflatex', '-interaction=nonstopmode', '%s'%topic], 
-                                              shell=False, stdout=subprocess.PIPE)
+            pdftex_process = subprocess.Popen(['pdflatex', 
+                                               '-interaction=nonstopmode', '%s'%topic], 
+                                              shell=False, 
+                                              stdout=subprocess.PIPE)
             print "PDFTEX return code is %s" % pdftex_process.returncode
-            #if pdftex_process.returncode != 0:
-            txt = pdftex_process.communicate()[0].split("\n")
-            for l in txt:
-                if len(l) > 0 and l[0]=='!':
-                    print l
+            if pdftex_process.returncode != 0:
+                txt = pdftex_process.communicate()[0].split("\n")
+                for l in txt:
+                    if len(l) > 0 and l[0]=='!':
+                        print l
       
         if op is 'b':
             os.system('bibtex %s'%topic)
@@ -161,8 +165,10 @@ def main():
 
     final_pdf = os.path.join(dir_name, "writeup", "%s.pdf" % topic)
     submit_pdf = os.path.join(input_dir, "submit", "%s.pdf" % topic)
-    shutil.copy(final_pdf, submit_pdf)
-    
+    try:
+        shutil.copy(final_pdf, submit_pdf)
+    except IOError: 
+        print("Oops - looks like the pdf didn't get built - check the latex log")
     os.system("google-chrome %s" % dir_name)
     os.system("google-chrome %s" % submit_pdf)
     
