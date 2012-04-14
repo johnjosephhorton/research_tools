@@ -79,9 +79,10 @@ def make_datasets():
     
     data_location = os.path.join(os.getcwd(), "data")
     query_location = os.path.join(os.getcwd(), "code", "sql")
-    setup_query =  open(os.path.join(query_location, query_plan['setup']), "r").read()
-    cur.execute(setup_query)
-    cur.connection.commit()
+    for query in query_plan['setup']: 
+        setup_query =  open(os.path.join(query_location, query), "r").read()
+        cur.execute(setup_query)
+        cur.connection.commit()
     for query in query_plan['output']:
         query_file = open(os.path.join(query_location, query), "r")
         csv_file = os.path.join(data_location, query + ".csv")

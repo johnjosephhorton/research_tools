@@ -1,2 +1,2 @@
-setup: setup.sql
+setup: [setup.sql]
 output: [num_contractors.sql, num_jobs.sql]
