@@ -12,11 +12,13 @@ import subprocess
 import time  
 import yaml 
 
-# to do
-# Add arxiv bundler 
-# Support postscript 
-# Add wsd support 
+# To Do
+# add arxiv/ssrn bundler 
+# support postscript output 
+# add wsd support 
 # Add html export option 
+# add google docts options 
+# etherpad version? 
 
 def nickname(n): 
     """Appends the octal [a-h] representation of directory number 
@@ -50,7 +52,7 @@ def csv_to_html(data_dir):
     font-weight: bold;
     cursor: default;
    }
-</style>
+   </style>
    </head><body>""")
     csv_files = [c for c in os.listdir(data_dir) if re.search(r'.+\.csv', c)]
     for csv_file in csv_files:
@@ -79,12 +81,9 @@ def pg_query_to_csv(cur, query, csv_fn):
 def make_datasets():   
     yaml_file = os.path.join(os.getcwd(), "code", "sql", "make.yaml")
     query_plan = yaml.load(open(yaml_file, 'r'))
-    print query_plan
     conn = get_pg_connection()
-    cur = conn.cursor()
-    # execute the set-up scripts 
-        
-        # execute the actual data scripts 
+    cur = conn.cursor()       
+    
     data_location = os.path.join(os.getcwd(), "data")
     query_location = os.path.join(os.getcwd(), "code", "sql")
     setup_query =  open(os.path.join(query_location, query_plan['setup']), "r").read()
@@ -184,48 +183,6 @@ def main():
     os.system("google-chrome %s" % submit_pdf)
     
     return None    
-
-
-# def create_paper(topic, path, postscript=False, writeup_folder = "writeup"): 
-#     dir_name = "/tmp/%s%s"%(topic,int(round(time.time(),0)))
-#     print path, dir_name
-#     d.copy_tree(path,dir_name)
-#     os.chdir(dir_name + "/%s" % writeup_folder)
-#     sweave_process = subprocess.Popen(["echo", "Sweave('%s.Rnw')"%topic], stdout=subprocess.PIPE)
-#     r_process = subprocess.Popen(["R", "--vanilla"], 
-#                                  shell = False, 						                  
-#                                  stdin=sweave_process.stdout,
-#                                  stdout=subprocess.PIPE, 
-#                                  stderr=subprocess.PIPE
-#                                  )
-#     sweave_process.stdout.close()
-#     txt = r_process.communicate()[1].split("\n")
-#     for l in txt:
-#         if l[0:5]=="Error":
-#             print l
-
-#     print "The R process return code: %s" % r_process.returncode
-#     #return False
-#     #print r_process.returncode
-
-#     seq = ['p','b','p','b','p','p','p']
-#     for op in seq: 
-#         print "Doing a %s iteration"%op
-#         if op is 'p'
-#             pdftex_process = subprocess.Popen(['pdflatex', '-interaction=nonstopmode', '%s'%topic], 
-#                                               shell=False, stdout=subprocess.PIPE)
-#             print "PDFTEX return code is %s" % pdftex_process.returncode
-#             #if pdftex_process.returncode != 0:
-#             txt = pdftex_process.communicate()[0].split("\n")
-#             for l in txt:
-#                 if len(l) > 0 and l[0]=='!':
-#                     print l
-    
-#             #pdftex_process.close()
-#         if op is 'b':
-#             os.system('bibtex %s'%topic)
-#         if op is 'l':
-#             os.system('latex %s'%topic)
 
 #     try:
 #         if postscript:
