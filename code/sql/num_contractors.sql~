@@ -1,4 +1,0 @@
-select 
-status, count(*) as num_contractors, 
-from agg.c_contractor 
-group by status

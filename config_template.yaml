@@ -1,5 +1,0 @@
-dbname: <name of your database>  
-user: <user name> 
-password: <password> 
-host: <host - if port forwarding, this is usually just localhost>  
-port: <port that db connection is open on> 
