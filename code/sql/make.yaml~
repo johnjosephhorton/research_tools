@@ -1,0 +1,5 @@
+set-up: setup.sql 
+pay-off:
+	- num_contractors.sql 
+	- num_jobs.sql 
+	

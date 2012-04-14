@@ -1,0 +1,5 @@
+dbname: odw 
+user: odw 
+password: odw
+host: localhost 
+port: 63333 
