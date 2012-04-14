@@ -1,1 +1,8 @@
-config.yaml*~
+config.yaml
+*~
+submit/*
+.RData
+*.Rout
+data/*.csv 
+.Rhistory
+*.log 

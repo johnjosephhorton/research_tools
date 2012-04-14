@@ -163,12 +163,23 @@ def main():
         if op is 'l':
             os.system('latex %s'%topic)
 
-    final_pdf = os.path.join(dir_name, "writeup", "%s.pdf" % topic)
+    writeup_folder = os.path.join(dir_name, "writeup")
+    for f in os.listdir(writeup_folder): 
+        print f 
+        if re.search(r'.+\.(pdf|tex|bbl)$', f):
+            source = os.path.join(writeup_folder, f)
+            destination_input = os.path.join(input_dir, "submit", f)
+            destination_output = os.path.join(dir_name, "submit", f)
+            try:
+                shutil.copy(source, destination_input)
+                shutil.copy(source, destination_output)
+            except IOError: 
+                print("""Oops - looks like the pdf didn't get built, or it got built
+                 but the filenames are wrong. In any case, check the latex log
+                 in /writeup of the output directory.   
+                 """)
+
     submit_pdf = os.path.join(input_dir, "submit", "%s.pdf" % topic)
-    try:
-        shutil.copy(final_pdf, submit_pdf)
-    except IOError: 
-        print("Oops - looks like the pdf didn't get built - check the latex log")
     os.system("google-chrome %s" % dir_name)
     os.system("google-chrome %s" % submit_pdf)
     
