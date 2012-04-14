@@ -12,20 +12,13 @@ import subprocess
 import time  
 import yaml 
 
-# To Do
-# add arxiv/ssrn bundler 
-# support postscript output 
-# add wsd support 
-# Add html export option 
-# add google docts options 
-# etherpad version? 
-
 def nickname(n): 
     """Appends the octal [a-h] representation of directory number 
        to the date time stamp folder to make command line navigation easier."""
     return 'a' if n==0 else ''.join([chr(97 + int(i)) for i in oct(n)[1:]]) 
 
 def get_pg_connection():
+    """Creates a connection to ODW""" 
     config_yaml = os.path.join(os.getcwd(), "config.yaml")
     db_params = yaml.load(open(config_yaml, 'r'))
     connect_tuple = tuple([db_params[x] for x in ['dbname', 'user', 'password', 
