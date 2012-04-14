@@ -12,6 +12,8 @@ import subprocess
 import time  
 import yaml 
 
+# does this get pulled? 
+
 def nickname(n): 
     """Appends the octal [a-h] representation of directory number 
        to the date time stamp folder to make command line navigation easier."""
