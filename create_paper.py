@@ -12,8 +12,6 @@ import subprocess
 import time  
 import yaml 
 
-# does this get pulled? 
-
 def nickname(n): 
     """Appends the octal [a-h] representation of directory number 
        to the date time stamp folder to make command line navigation easier."""
@@ -94,6 +92,7 @@ def make_datasets():
 def main():
     input_dir = os.getcwd() 
     topic = os.path.basename(os.getcwd())
+    print("The topic is %s" % topic)
     parser = optparse.OptionParser()
 
     parser.add_option("-d", "--output_dir", dest="output_dir", 
@@ -173,7 +172,7 @@ def main():
                  in /writeup of the output directory.   
                  """)
 
-    submit_pdf = os.path.join(input_dir, "submit", "%s.pdf" % topic)
+    submit_pdf = os.path.join(dir_name, "submit", "%s.pdf" % topic)
     os.system("google-chrome %s" % dir_name)
     os.system("google-chrome %s" % submit_pdf)
     
