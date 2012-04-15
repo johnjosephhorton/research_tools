@@ -11,7 +11,18 @@ import shutil
 import subprocess 
 import time  
 import yaml 
+import sys
 
+def hashfree(dir):
+    """Makes sure---before we start doing lots of intense computations---that
+       there are not any files w/ hash in front of them (which the shutil utility
+       cannot copy for some reason) """
+    for root, subFolders, files in os.walk(dir):
+        for file in files:
+            if re.search('\.#.*', file):
+                return (False, file) 
+    return (True, None) 
+  
 def nickname(n): 
     """Appends the octal [a-h] representation of directory number 
        to the date time stamp folder to make command line navigation easier."""
@@ -92,6 +103,12 @@ def make_datasets():
 
 def main():
     input_dir = os.getcwd() 
+    try:
+        result, file = hashfree(input_dir)
+        assert(result)
+    except: 
+        print("you've got a temp file - go save %s" % file)
+        return False 
     topic = os.path.basename(os.getcwd())
     print("The topic is %s" % topic)
     parser = optparse.OptionParser()
