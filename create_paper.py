@@ -112,14 +112,17 @@ def main():
     if options.get_data: 
         make_datasets()
         
-        
-
+       
     if options.run_r:
         os.chdir(os.path.join(os.getcwd(), "code/R/"))
-        r_process = subprocess.Popen(['Rscript', 'analysis.R'], 
+        yaml_file = os.path.join(os.getcwd(), "r_make.yaml")
+        execution_plan = yaml.load(open(yaml_file, 'r'))
+        r_scripts = execution_plan['scripts']
+        for script in r_scripts: 
+            r_process = subprocess.Popen(['Rscript', script], 
                                      shell=False, 
                                      stdout=subprocess.PIPE)
-        flush = r_process.communicate()[0]
+            flush = r_process.communicate()[0]
     
     num_dirs = 0
     try:
