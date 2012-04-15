@@ -1,2 +1,13 @@
-setup: [setup.sql]
-output: [num_contractors.sql, num_jobs.sql]
+groups:
+  P1:
+     setup: 
+     output:
+       - num_contractors.sql
+       - num_jobs.sql 
+  P2:
+     setup: setup.sql
+     output:
+       - num_contractors.sql
+       - num_jobs.sql 
+    
+

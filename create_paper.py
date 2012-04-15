@@ -82,24 +82,79 @@ def pg_query_to_csv(cur, query, csv_fn):
     cur.copy_expert("""COPY (%s) TO STDOUT WITH CSV HEADER""" % query_wo_semicolon,
                     file(csv_fn,'w'))
 
+
+def run_group(group, query_location, last_execution_time): 
+    """ 
+    Determines if any query in the last has a modification time greater than 
+    the last execution time.
+    """
+    if group['setup']:
+        queries = [group['setup']] + group['output'] 
+    else:
+        queries = group['output']
+    for q in queries:
+        f = os.path.join(query_location, q)
+        if os.path.getmtime(f) > last_execution_time:
+            return True
+    return False
+
+def get_last_execution_time():
+    try:
+        f = open(os.path.join(os.getcwd(), "code", "sql", "execution_history.log"), "r")
+        times = f.readlines()
+        if not times: # no lines in the log file 
+            return -1.0 
+        f.close()
+        return float(times[len(times)-1])
+    except IOError: # log filed oesn't exist - treating as if never been run 
+        return -1.0
+
+def record_execution_time(): 
+    with open(os.path.join(
+            os.getcwd(), "code", "sql", "execution_history.log"), "a") as myfile:
+        myfile.write("%s" % time.time())
+        myfile.write("\n")
+
 def make_datasets():   
+    last_execution_time = get_last_execution_time()
+
     yaml_file = os.path.join(os.getcwd(), "code", "sql", "make.yaml")
     query_plan = yaml.load(open(yaml_file, 'r'))
-    conn = get_pg_connection()
-    cur = conn.cursor()       
-    
+  
     data_location = os.path.join(os.getcwd(), "data")
     query_location = os.path.join(os.getcwd(), "code", "sql")
-    for query in query_plan['setup']: 
-        setup_query =  open(os.path.join(query_location, query), "r").read()
-        cur.execute(setup_query)
-        cur.connection.commit()
-    for query in query_plan['output']:
-        query_file = open(os.path.join(query_location, query), "r")
-        csv_file = os.path.join(data_location, query + ".csv")
-        pg_query_to_csv(cur, query_file.read(), csv_file)
+
+    groups_to_run = [] 
+    for group_name in query_plan['groups']:
+        group = query_plan['groups'][group_name]
+        if run_group(group, query_location, last_execution_time):
+            groups_to_run.append(group_name)
+
+    if not groups_to_run:
+        print("No groups to run")
+        return True 
+
+    conn = get_pg_connection()
+    cur = conn.cursor()       
+
+    for group_name in groups_to_run:
+        group = query_plan['groups'][group_name]
+        if group['setup']:
+            setup_query_file = os.path.join(query_location, group['setup'])
+            setup_query = open(setup_query_file, "r").read()
+            record_execution_time()
+            cur.execute(setup_query)
+            cur.connection.commit()
+        for output_query in group['output']:
+            query_file = open(os.path.join(query_location, output_query), "r")
+            csv_file = os.path.join(
+                data_location, group_name + "-" + output_query + ".csv")
+            record_execution_time()
+            pg_query_to_csv(cur, query_file.read(), csv_file)
+    
     csv_to_html(data_location)
-    return None 
+             
+    return None
 
 def main():
     input_dir = os.getcwd() 
@@ -123,8 +178,15 @@ def main():
     parser.add_option("-g", "--get_data", dest="get_data", action="store_true", 
                       help="boolean to get the data from odw", 
                       default = False)
+    
+    parser.add_option("-f", "--flush", dest="flush", action="store_true", 
+                      help="boolean to flush out execution history and force a fresh data fetch", 
+                      default = False)
 
     (options, args) = parser.parse_args() 
+
+    if options.flush:
+        os.remove(os.path.join(os.getcwd(), "code/sql/execution_history.log"))
 
     if options.get_data: 
         make_datasets()
@@ -179,7 +241,6 @@ def main():
 
     writeup_folder = os.path.join(dir_name, "writeup")
     for f in os.listdir(writeup_folder): 
-        print f 
         if re.search(r'.+\.(pdf|tex|bbl)$', f):
             source = os.path.join(writeup_folder, f)
             destination_input = os.path.join(input_dir, "submit", f)

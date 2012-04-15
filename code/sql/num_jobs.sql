@@ -1,4 +1,4 @@
 select 
-status, count(*) as num_jobs 
+status, count(*) as number_jobs 
 from agg.b_opening 
 group by status
