@@ -13,15 +13,49 @@ import time
 import yaml 
 import sys
 
-def hashfree(dir):
-    """Makes sure---before we start doing lots of intense computations---that
-       there are not any files w/ hash in front of them (which the shutil utility
-       cannot copy for some reason) """
-    for root, subFolders, files in os.walk(dir):
-        for file in files:
-            if re.search('\.#.*', file):
-                return (False, file) 
-    return (True, None) 
+import settings
+import templates 
+
+sys.path.append(settings.WSD_LOCATION)
+BROWSER = settings.BROWSER
+CSS_HOTLINK = settings.CSS_HOTLINK 
+
+import WritingSmellDetector.wsd as wsd
+import flatex.flatex as flatex 
+import csv2html
+import latexlog2html as l2h
+
+def writing_smell(combined_text, output_dir):
+    """ 
+    Uses the writing smell detector to create an HTML file showing 
+    the problematic writing. 
+    """
+    # this is a kludge work around to accomodate the fact that the 
+    # WSD main routine takes an object as an output (it's the result 
+    # of the command line parsing). 
+    class ArgSimulator(object): 
+        def __init__(self, combined_text, output_dir):
+            self.text = combined_text
+            self.abspath=True
+            self.include_empty=False    
+            self.indent=4 
+            self.no_embed_css=False 
+            self.outfile=os.path.join(output_dir, 'smells.html')
+            self.output_format='html' 
+            self.reftext=False 
+            self.rules=[]
+     
+    args = ArgSimulator(combined_text, output_dir)
+    wsd.main(args)
+    return None 
+    
+def make_html_index(output_dir, topic, alert=None): 
+    file = open(os.path.join(output_dir, "report.html"), "w")
+    template = templates.TEMPLATE_HTML_INDEX  % (
+        "<h1> %s </h1>" % alert if alert else "", topic, topic)
+    file.writelines(template)
+    file.close() 
+    return None 
   
 def nickname(n): 
     """Appends the octal [a-h] representation of directory number 
@@ -37,38 +71,37 @@ def get_pg_connection():
     return psycopg2.connect("dbname=%s user=%s password=%s host=%s port=%s" % 
                             connect_tuple)
 
-def csv_to_html(data_dir): 
-    """Generates a HTML file of tables of the dataset - useful for quick viewing. Ideally, 
-       the tables would be sortable, searcheable, summarizeable etc., but right now, that
-       functionality doesn't work. Not sure why.
-       Probably want to switch to: http://tablesorter.com/docs/ 
-    """
-    html = open(os.path.join(data_dir, "consolidated_data.html"), "w")
-    html.write("""
-    <html>
-    <head>
-    <script type="text/javascript" src='../libraries/sorttable.js'></script>
+def tex_to_html(output_dir): 
+    """Forms an HTML version of the paper, making each of the inputs a clickable href. 
+       
+       To Do: Add a summmary header at the top 
+              Make the images clickable as well 
+              Add back-buttons? 
+              jquery reveal? 
+   """
+    tex_input_re = r"""\\input{[^}]*}"""
+    tex_input_filename_re = r"""{[^}]*"""
+    tex_files = [c for c in os.listdir(os.path.join(output_dir, "writeup")) if re.search(r'.+\.tex$', c)]
 
-   <style>
-   table.sortable thead {
-    background-color:#eee;
-    color:#666666;
-    font-weight: bold;
-    cursor: default;
-   }
-   </style>
-   </head><body>""")
-    csv_files = [c for c in os.listdir(data_dir) if re.search(r'.+\.csv', c)]
-    for csv_file in csv_files:
-        html.write("<h1>%s</h1>" % csv_file)
-        html.write("<table class='sortable'>")
-        for line in csv.reader(open(os.path.join(data_dir, csv_file), "r")):
-            html.write("<tr>\n")
-            html.write("</tr>\n")
-            for item in line: 
-                html.write('<td>' + item + '</td>')
-        html.write("</table>")
-    html.close() 
+    for filename in tex_files: 
+        sink = open(os.path.join(output_dir, "writeup", filename + ".html"), "w")
+        source = open(os.path.join(output_dir, "writeup", filename), "r")
+        sink.writelines("<html><pre>")
+        for source_line in source:
+            m = re.search(tex_input_re,source_line)
+            if m: 
+                matching_line = m.group(0)
+                file_inputed = re.search(tex_input_filename_re, 
+                                         source_line).group(0)[1:]
+                sink.writelines('</pre>\input{<a href="%s">%s</a>}<pre>' % 
+                                (file_inputed + '.html', file_inputed))
+            else:
+                sink.writelines(source_line)
+        sink.writelines("</pre></html>")
+        source.close() 
+        sink.close() 
+    return None 
+
 
 def pg_query_to_csv(cur, query, csv_fn):
     """
@@ -106,7 +139,7 @@ def get_last_execution_time():
             return -1.0 
         f.close()
         return float(times[len(times)-1])
-    except IOError: # log filed oesn't exist - treating as if never been run 
+    except IOError: # log filed doesn't exist - treating as if never been run 
         return -1.0
 
 def record_execution_time(): 
@@ -120,7 +153,7 @@ def make_datasets():
 
     yaml_file = os.path.join(os.getcwd(), "code", "sql", "make.yaml")
     query_plan = yaml.load(open(yaml_file, 'r'))
-  
+    
     data_location = os.path.join(os.getcwd(), "data")
     query_location = os.path.join(os.getcwd(), "code", "sql")
 
@@ -151,24 +184,35 @@ def make_datasets():
                 data_location, group_name + "-" + output_query + ".csv")
             record_execution_time()
             pg_query_to_csv(cur, query_file.read(), csv_file)
-    
-    csv_to_html(data_location)
              
     return None
 
-def main():
-    input_dir = os.getcwd() 
-    try:
-        result, file = hashfree(input_dir)
-        assert(result)
-    except: 
-        print("you've got a temp file - go save %s" % file)
-        return False 
-    topic = os.path.basename(os.getcwd())
-    print("The topic is %s" % topic)
+
+def sanitize_tex_file(output_dir, tex_filename): 
+    """Removes targeted lines from a tex file - useful 
+    for extracting set-up inputs that allow a sub-file to be
+    editing using GUI-based latex editors"""
+   
+    TMP_FILE_NAME = "temp314159.tmp"
+    line_replace_regexes = [r"""\\input{insitustart\.tex}""", 
+                            r"""\\input{insituend\.tex}"""] 
+    source = open(os.path.join(output_dir, "writeup", tex_filename), "r")
+    sink = open(os.path.join(output_dir, "writeup", TMP_FILE_NAME), "w")
+    for source_line in source:
+        for regex in line_replace_regexes: 
+            if re.search(regex, source_line):
+                print "match!: ", source_line
+            else:
+                sink.write(source_line)
+    source.close()
+    sink.close()
+    os.remove(tex_filename)
+    return None 
+
+def parse_terminal_input():
     parser = optparse.OptionParser()
 
-    parser.add_option("-d", "--output_dir", dest="output_dir", 
+    parser.add_option("-d", "--output_path", dest="output_path", 
                       help="target directory for reports", default = "/tmp")
        
     parser.add_option("-r", "--run_r", dest="run_r", action="store_true", 
@@ -180,54 +224,23 @@ def main():
                       default = False)
     
     parser.add_option("-f", "--flush", dest="flush", action="store_true", 
-                      help="boolean to flush out execution history and force a fresh data fetch", 
+                      help="""boolean to flush out execution history 
+                              and force a fresh data fetch""", 
                       default = False)
 
-    (options, args) = parser.parse_args() 
+    return parser.parse_args() 
 
-    if options.flush:
-        os.remove(os.path.join(os.getcwd(), "code/sql/execution_history.log"))
-
-    if options.get_data: 
-        make_datasets()
-        
-       
-    if options.run_r:
-        os.chdir(os.path.join(os.getcwd(), "code/R/"))
-        yaml_file = os.path.join(os.getcwd(), "r_make.yaml")
-        execution_plan = yaml.load(open(yaml_file, 'r'))
-        r_scripts = execution_plan['scripts']
-        for script in r_scripts: 
-            r_process = subprocess.Popen(['Rscript', script], 
-                                     shell=False, 
-                                     stdout=subprocess.PIPE)
-            flush = r_process.communicate()[0]
-    
-    num_dirs = 0
-    try:
-        num_dirs = len(os.listdir(options.output_dir))
-    except OSError:
-        print "OSError - trying to find the number of folders in the dictory failed"
-
-    folder_name = nickname(num_dirs) + '-' + datetime.datetime.utcnow().strftime(
-        '%Y-%m-%dT%H:%M:%SZ')
-    dir_name = os.path.join(options.output_dir, folder_name)
-    os.mkdir(dir_name)
-
-    # moves to the output directory 
-    d.copy_tree(input_dir,dir_name)
-   
-    os.chdir(os.path.join(dir_name, "writeup"))
-    seq = ['p','b','p','b','p','p','p']
+def make_pdf(writeup_folder, topic, seq): 
+    os.chdir(writeup_folder)
     for op in seq: 
-        print "Doing a %s iteration" % op 
-        
+        print("Doing a %s iteration" % op)         
         if op is 'p':
             pdftex_process = subprocess.Popen(['pdflatex', 
-                                               '-interaction=nonstopmode', '%s'%topic], 
+                                               '-interaction=nonstopmode', 
+                                               '%s'%topic], 
                                               shell=False, 
                                               stdout=subprocess.PIPE)
-            print "PDFTEX return code is %s" % pdftex_process.returncode
+            print("PDFTEX return code is %s" % pdftex_process.returncode)
             if pdftex_process.returncode != 0:
                 txt = pdftex_process.communicate()[0].split("\n")
                 for l in txt:
@@ -238,41 +251,114 @@ def main():
             os.system('bibtex %s'%topic)
         if op is 'l':
             os.system('latex %s'%topic)
+    return None 
 
-    writeup_folder = os.path.join(dir_name, "writeup")
+
+def get_folder_name(output_path): 
+    num_dirs = 0
+    try:
+        num_dirs = len(os.listdir(output_path))
+    except OSError:
+        print """OSError - trying to find the number of folders 
+               in the dictory failed"""
+    folder_name = nickname(num_dirs
+                           ) + '-' + datetime.datetime.utcnow().strftime(
+        '%Y-%m-%dT%H:%M:%SZ')
+    return os.path.join(output_path, folder_name)    
+
+def run_R(): 
+    os.chdir(os.path.join(input_dir, "code/R/"))
+    yaml_file = os.path.join(intput_dir, "r_make.yaml")
+    execution_plan = yaml.load(open(yaml_file, 'r'))
+    r_scripts = execution_plan['scripts']
+    for script in r_scripts:
+        r_process = subprocess.Popen(['Rscript', script], 
+                                     shell=False, 
+                                     stdout=subprocess.PIPE)
+        flush = r_process.communicate()[0]
+    return None 
+
+def pull_build_products_back_to_input_dir(input_dir, output_dir): 
+    alert = None 
+    writeup_folder = os.path.join(output_dir, "writeup")
     for f in os.listdir(writeup_folder): 
         if re.search(r'.+\.(pdf|tex|bbl)$', f):
             source = os.path.join(writeup_folder, f)
             destination_input = os.path.join(input_dir, "submit", f)
-            destination_output = os.path.join(dir_name, "submit", f)
+            destination_output = os.path.join(output_dir, "submit", f)
             try:
                 shutil.copy(source, destination_input)
                 shutil.copy(source, destination_output)
             except IOError: 
-                print("""Oops - looks like the pdf didn't get built, or it got built
-                 but the filenames are wrong. In any case, check the latex log
-                 in /writeup of the output directory.   
+                print("""Oops - looks like the pdf didn't get built, 
+                         or it got built but the filenames are wrong. 
+                         In any case, check the latex log
+                         in /writeup of the output directory.   
                  """)
+                alert = "Paper not created!" 
 
-    submit_pdf = os.path.join(dir_name, "submit", "%s.pdf" % topic)
-    os.system("google-chrome %s" % dir_name)
-    os.system("google-chrome %s" % submit_pdf)
+def all_files_saved(input_dir):
+    """Makes sure---before we start doing lots of intense computations---that
+       there are not any files w/ hash in front of them (which the shutil utility
+       cannot copy for some reason) """
+    no_bad_files = True 
+    bad_files = []
+    for root, subFolders, files in os.walk(input_dir):
+        for f in files:
+            if re.search('\.#.*', f):
+                no_bad_files = False
+                bad_files.append(f)                
+
+    if not no_bad_files:
+        print("you've got at least one temp file - go save:")
+        for f in bad_files:
+            print f 
+        return False 
+    else:
+        return True
+
+def main(input_dir, output_path, flush, get_data, run_r):
+    assert(all_files_saved(input_dir))
+    topic = os.path.basename(input_dir)
+    print("The paper topic is %s" % topic)
+
+    if flush: os.remove(os.path.join(input_dir, "code/sql/execution_history.log"))
+    if get_data: make_datasets()
+    if run_r: run_R() 
+
+    output_dir = get_folder_name(output_path)        
+    os.mkdir(output_dir)
+    d.copy_tree(input_dir,output_dir)
     
-    return None    
+    base_file = os.path.join(input_dir, "writeup", "%s.tex" % topic)
+    combined_file = os.path.join(output_dir, "combined_file.tex")
+    flatex.main(base_file, combined_file)
+    tex_to_html(output_dir)
 
-#     try:
-#         if postscript:
-#             os.system('dvips -t letter -o temp.ps temp.dvi')
-#             os.system('ps2pdf temp.ps') 
-#             shutil.copy('temp.ps', path + "/submit/" + topic + ".ps")
+    seq = ['p','b','p','b','p','p','p']
+    make_pdf(os.path.join(output_dir, "writeup"),topic, seq)
+    alert = pull_build_products_back_to_input_dir(input_dir, output_dir)
+    make_html_index(output_dir, topic, alert)
+   
+    # writing_smell(combined_file, dir_name)
+    # sanitize_tex_file(output_dir, "model.tex")    
+    #TK: csv_to_html(data_location)
 
-#         shutil.copy('%s.pdf'%topic, path + "/submit/" + topic + ".pdf")
-#         shutil.copy('%s.tex'%topic, path + "/submit/" + topic + ".tex")
-#         shutil.copy('%s.bbl'%topic, path + "/submit/" + topic + ".bbl")
-#     except IOError:
-# 	print "Can't copy because the PDF/TEX/Bib etc. didn't get made"
-
+    latex_log = os.path.join(output_dir, "writeup", "%s.log" % topic)
+    html_latex_log = l2h.convert_log(latex_log, 
+                                    templates.LATEX_LOG_FILE_HEADER,
+                                    settings.CSS_HOTLINK)
+    # write the log file
+    f = open(os.path.join(output_dir, "latex_log.html"), "w")
+    f.writelines(html_latex_log)
+    f.close() 
+      
+    report_location = os.path.join(output_dir, "report.html")
+    os.system("%s %s" % (BROWSER, report_location))
+    return True    
 
 if __name__ == '__main__':
-    main()
+    input_dir = os.getcwd() 
+    options, args = parse_terminal_input() 
+    main(input_dir, options.output_path, options.flush, options.get_data, options.run_r)
 
