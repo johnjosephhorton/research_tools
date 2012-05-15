@@ -5,7 +5,7 @@ import datetime
 import distutils.dir_util as d 
 import optparse 
 import os
-import psycopg2 
+
 import re
 import shutil
 import subprocess 
@@ -24,6 +24,7 @@ import WritingSmellDetector.wsd as wsd
 import flatex.flatex as flatex 
 import csv2html
 import latexlog2html as l2h
+import connect2db 
 
 def writing_smell(combined_text, output_dir):
     """ 
@@ -62,14 +63,6 @@ def nickname(n):
        to the date time stamp folder to make command line navigation easier."""
     return 'a' if n==0 else ''.join([chr(97 + int(i)) for i in oct(n)[1:]]) 
 
-def get_pg_connection():
-    """Creates a connection to ODW""" 
-    config_yaml = os.path.join(os.getcwd(), "config.yaml")
-    db_params = yaml.load(open(config_yaml, 'r'))
-    connect_tuple = tuple([db_params[x] for x in ['dbname', 'user', 'password', 
-                                                    'host', 'port']])
-    return psycopg2.connect("dbname=%s user=%s password=%s host=%s port=%s" % 
-                            connect_tuple)
 
 def tex_to_html(output_dir): 
     """Forms an HTML version of the paper, making each of the inputs a clickable href. 
@@ -167,7 +160,7 @@ def make_datasets():
         print("No groups to run")
         return True 
 
-    conn = get_pg_connection()
+    conn = connect2db.get_db_connection() 
     cur = conn.cursor()       
 
     for group_name in groups_to_run:
@@ -186,7 +179,6 @@ def make_datasets():
             pg_query_to_csv(cur, query_file.read(), csv_file)
              
     return None
-
 
 def sanitize_tex_file(output_dir, tex_filename): 
     """Removes targeted lines from a tex file - useful 

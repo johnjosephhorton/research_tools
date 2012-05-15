@@ -4,6 +4,15 @@ import tempfile
 import latexlog2html
 import templates 
 import settings 
+import connect2db
+
+class Connect2DBTest(unittest2.TestCase):
+    
+    def test_get_db_connection(self):
+        """Right now, fails test if it cannot make a
+        connection to to database."""
+        con = connect2db.get_db_connection()
+        self.assertEqual(True,True)
 
 class CreatePaperTest(unittest2.TestCase):
 
