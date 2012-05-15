@@ -6,3 +6,4 @@ submit/*
 data/*.csv 
 .Rhistory
 *.log 
+*.pyc
