@@ -1,47 +1,41 @@
-To Do
-=====
-1. Add the option of running sed on all tex files before combination 
-2. Add ability to do a make-like sequencing of R files 
-3. Do something smarter with config information 
-4. Make the HTML data view optional 
-5. Make a "where is what?" view of the source document as HTML  
-6. Add WSD integration 
-7. Add HTML export 
-8. Turn Bibtex file into HTML file w/ links 
-
-
 Overview 
-========
-This repository is a template for all future research 
-projects.  
+======== 
 
+'research_tools' is my (John Horton's) software tools for managing
+papers. It is distributed under the GNU public license. It's basic
+purpose is to automate many of the tedious parts of writing papers and
+making it easier to start new projects with everything needed.
 
-Getting Started
-===============
+What it does
+============
+There are two main components: 
 
-1. Fork this repository
-2. Rename .tex, .bib and repository to a single new name 
-3. Edit the yaml.config if the databse needs to change 
+create_project.py - This python script creates a new project by: 
+a) creates complete file structure 
+b) creates stub files for R code, LaTeX, BibTex etc. using templates.py 
+c) creates a local "make.py" file for building the paper 
 
+create_paper.py - This orchestrates the building on the paper---it manages the 
+running of SQL scripts, R scripts, latex/bibtex etc.
 
 How it works
 ============
-
-The main creat_paper.py script does several things based on the options 
-based to it. It will go get data from database when based the '-g' option; 
-it will re-run the R analysis if passed the '-r' option. It will always
-generate the pdf and put it into the /submit folder.  
-
-When the PDF is done running, it opens two tabs in chrome: 
-1. The output directory (where all log files etc. are available)
-2. A PDF of the actual document. 
-3. In the /data folder, a HTML version of CSV files is created for quick inspection 
+TK. 
 
 To Do
 =====
-1. Make the HTML CSV tables sortable 
-2. Generate HTML / ODF / PS output versions 
-3. Integrate the WSD.py
-4. Add arxiv/ssrn bundler 
-5. add google docs export options 
-6. 
+1. Add the option of running sed on all tex files before combination 
+2. [DONE] Add ability to do a make-like sequencing of R files 
+3. Do something smarter with config information 
+4. Make the HTML data view optional 
+5. [DONE] Make a "where is what?" view of the source document as HTML  
+6. Add WSD integration 
+7. Add HTML export 
+8. Turn Bibtex file into HTML file w/ links 
+10. Make the HTML CSV tables sortable 
+11. Generate HTML / ODF / PS output versions 
+12. Add arxiv/ssrn bundler 
+13. add google docs export options  
+14. Add a reasonable 'gitignore' to the templates 
+15. Show several table examples
+16. Investigate virtualenv-like solutions 
