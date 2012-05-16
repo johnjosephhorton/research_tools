@@ -49,10 +49,29 @@ According to R's calculations, $1 + 1$ is equal to:
 
 \\input{./numbers/sql_output.txt}
 
+\\section{Inputted Model}
+
+\\input{model.tex} 
+
+\\section{Using matplotlib for making figures}
+
+\\begin{figure}[h]
+  \\centering
+  \\includegraphics[scale=0.25]{./diagrams/matplotlib.png}
+  \\caption{Here is a matplot lib constructed figure}
+  \\label{fig:matplotlib}
+\\end{figure}
+
 \\bibliographystyle{aer}
 \\bibliography{%s.bib}
 
 \\end{document} 
+"""
+
+LATEX_INPUT_FILE="""
+\\input{insitustart.tex}
+Here is a model
+\\input{insituend.tex} 
 """
 
 SQLMAKE = """groups:
@@ -138,11 +157,99 @@ TEMPLATE_HTML_INDEX = """
  <h1>Resources</h1> 
  <ul>
  <li><a href="./submit/%s.pdf" target="_blank">PDF of the paper</a></li> 
- <li><a href="./latex_log.html" target="_blank">LaTeX Log File</a></li> 
  <li><a href="./writeup/%s.tex.html" target="_blank">HTML of tex source</a></li> 
  <li><a href="." target="_blank">Directory listing</a></li>     
- <li><a href="./data/consolidated_data.html" target="_blank">Data sets</a></li>     
+ <li><a href="./data/consolidated_data.html" target="_blank">Data sets</a></li>    
+ <li><a href="./combined_file.tex">All LaTeX Stitched Together</a></li>  
+ <li><a href="./%s">LaTeX Log File</a></li>  
  </ul>
  </body> 
  </html> 
 """
+
+MATPLOTLIB_EXAMPLE = """
+import numpy as np
+import matplotlib.pyplot as plt
+
+a = np.arange(0,3,.02)
+b = np.arange(0,3,.02)
+c = np.exp(a)
+d = c[::-1]
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.plot(a,c,'k--',a,d,'k:',a,c+d,'k')
+leg = ax.legend(('Model length', 'Data length', 'Total message length'),
+           'upper center', shadow=True)
+ax.set_ylim([-1,20])
+ax.grid(False)
+ax.set_xlabel('Model complexity --->')
+ax.set_ylabel('Message length --->')
+ax.set_title('Minimum Message Length')
+
+ax.set_yticklabels([])
+ax.set_xticklabels([])
+
+# set some legend properties.  All the code below is optional.  The
+# defaults are usually sensible but if you need more control, this
+# shows you how
+
+# the matplotlib.patches.Rectangle instance surrounding the legend
+frame  = leg.get_frame()
+frame.set_facecolor('0.80')    # set the frame face color to light gray
+
+# matplotlib.text.Text instances
+for t in leg.get_texts():
+    t.set_fontsize('small')    # the legend text fontsize
+
+# matplotlib.lines.Line2D instances
+for l in leg.get_lines():
+    l.set_linewidth(1.5)  # the legend line width
+
+#plt.show()
+
+plt.savefig("../../writeup/diagrams/matplotlib.png", 
+             format="png")
+"""
+
+
+
+
+LATEX_INSITU_START = """ 
+\\documentclass[11pt]{article}
+
+\\usepackage{booktabs}
+\\usepackage{colortbl}
+\\usepackage{dcolumn} 
+\\usepackage{epstopdf}
+\\usepackage{fourier}
+\\usepackage{fullpage}
+\\usepackage{graphicx}
+\\usepackage{hyperref}
+\\usepackage{longtable} 
+\\usepackage{natbib}
+\\usepackage{rotating}
+\\usepackage{setspace} 
+\\usepackage{Sweave} 
+\\usepackage{tabularx}
+
+\\hypersetup{
+  colorlinks,
+  citecolor=blue,
+  linkcolor=blue,
+  urlcolor=blue,
+  filecolor=white
+}
+
+\\newtheorem{proposition}{Proposition}
+
+\\title{Here is a title}
+
+\\begin{document}
+   \\maketitle
+"""
+
+LATEX_INSITU_END = """ 
+\\end{document}
+"""
+
