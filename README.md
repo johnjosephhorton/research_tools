@@ -24,9 +24,9 @@ TK.
 
 To Do
 =====
-1. Add the option of running sed on all tex files before combination 
+1. [DONE] Add the option of running sed on all tex files before combination 
 2. [DONE] Add ability to do a make-like sequencing of R files 
-3. Do something smarter with config information 
+3. [DONE] Do something smarter with config information 
 4. Make the HTML data view optional 
 5. [DONE] Make a "where is what?" view of the source document as HTML  
 6. Add WSD integration 

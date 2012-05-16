@@ -11,6 +11,7 @@ import subprocess
 import time  
 import yaml 
 import sys
+import fileinput 
 
 import settings
 import templates 
@@ -50,7 +51,10 @@ def writing_smell(combined_text, output_dir):
 def make_html_index(output_dir, topic, alert=None): 
     file = open(os.path.join(output_dir, "report.html"), "w")
     template = templates.TEMPLATE_HTML_INDEX  % (
-        "<h1> %s </h1>" % alert if alert else "", topic, topic)
+        "<h1> %s </h1>" % alert if alert else "", 
+        topic, 
+        topic, 
+        settings.LATEX_HTML_FILE_NAME)
     file.writelines(template)
     file.close() 
     return None 
@@ -118,16 +122,16 @@ def run_group(group, query_location, last_execution_time):
             return True
     return False
 
-
-def get_last_execution_time():
+def get_last_execution_time(execution_history_log):
     try:
-        f = open(os.path.join(os.getcwd(), settings.SQL_EXECUTION_HISTORY_LOG), "r")
-        times = f.readlines()
-        if not times: # no lines in the log file 
+        f = open(execution_history_log, "r")
+        modification_times = f.readlines()
+        if not modification_times: 
             return -1.0 
         f.close()
         return float(times[len(times)-1])
-    except IOError: # log filed doesn't exist - treating as if never been run 
+    except IOError: 
+        print("%s doesn't exist" % execution_history_log)
         return -1.0
 
 def record_execution_time(input_dir): 
@@ -136,7 +140,7 @@ def record_execution_time(input_dir):
         myfile.write("\n")
 
 def make_datasets(input_dir):   
-    last_execution_time = get_last_execution_time()
+    last_execution_time = get_last_execution_time(input_dir, settings.SQL_EXECUTION_HISTORY_LOG)
     yaml_file = os.path.join(input_dir, settings.SQL_MAKE_FILE)
     query_plan = yaml.load(open(yaml_file, 'r'))   
     data_location = os.path.join(input_dir, "data")
@@ -172,27 +176,16 @@ def make_datasets(input_dir):
              
     return None
 
-
-def sanitize_tex_file(output_dir, tex_filename): 
-    """Removes targeted lines from a tex file - useful 
-    for extracting set-up inputs that allow a sub-file to be
-    editing using GUI-based latex editors"""
-   
-    TMP_FILE_NAME = "temp314159.tmp"
-    line_replace_regexes = [r"""\\input{insitustart\.tex}""", 
-                            r"""\\input{insituend\.tex}"""] 
-    source = open(os.path.join(output_dir, "writeup", tex_filename), "r")
-    sink = open(os.path.join(output_dir, "writeup", TMP_FILE_NAME), "w")
-    for source_line in source:
-        for regex in line_replace_regexes: 
-            if re.search(regex, source_line):
-                print "match!: ", source_line
-            else:
-                sink.write(source_line)
-    source.close()
-    sink.close()
-    os.remove(tex_filename)
-    return None 
+def inplace_sanitize(file_name, regex_list):
+    """This is supposed to replace inputs like in a latex file that are used to support 
+    WYSIWYG editing of subfiles. However, its' not working right now."""
+    print file_name, regex_list 
+    for line in fileinput.input(file_name, inplace=1):
+        matches = [re.search(regex, line) is not None for regex in regex_list]
+        if any(matches):
+            pass
+        else:
+            print line,
 
 def parse_terminal_input():
     parser = optparse.OptionParser()
@@ -278,6 +271,10 @@ def pull_build_products_back_to_input_dir(input_dir, output_dir):
                 print("""PDF Not Built!""")
                 alert = "Paper not created!" 
 
+def execute_python_scripts(python_dir): 
+    for f in os.listdir(python_dir):
+        execfile(os.path.join(python_dir, f))
+
 def all_files_saved(input_dir):
     """Makes sure---before we start doing lots of intense computations---that
        there are not any files w/ hash in front of them (which the shutil utility
@@ -307,11 +304,22 @@ def main(input_dir, output_path, flush, get_data, run_r):
     if get_data: make_datasets(input_dir)
     if run_r: run_R(input_dir) 
 
+    python_dir = os.path.join(input_dir, "code/python")
+    execute_python_scripts(python_dir)
+
     output_dir = get_folder_name(output_path)        
     os.mkdir(output_dir)
     d.copy_tree(input_dir,output_dir)
     
-    base_file = os.path.join(input_dir, "writeup", "%s.tex" % topic)
+    # for testing purposes - needs to iterate over all .tex files
+    _inputed_tex_files = tex_files = [c for c in os.listdir(os.path.join(output_dir, "writeup")) 
+                         if re.search(r'.+\.tex$', c)]
+    inputed_tex_files = [os.path.join(output_dir, "writeup", c) for c in _inputed_tex_files]
+    for tex_file in inputed_tex_files: 
+        print("Sanitizing file %s" % tex_file)
+        inplace_sanitize(tex_file, settings.LATEX_REPLACE_REGEXES)    
+    
+    base_file = os.path.join(output_dir, "writeup", "%s.tex" % topic)
     combined_file = os.path.join(output_dir, "combined_file.tex")
     
     # choking on a non-tex based input. 
@@ -322,21 +330,22 @@ def main(input_dir, output_path, flush, get_data, run_r):
     make_pdf(os.path.join(output_dir, "writeup"),topic, seq)
     alert = pull_build_products_back_to_input_dir(input_dir, output_dir)
     make_html_index(output_dir, topic, alert)
-   
+  
     # writing_smell(combined_file, dir_name)
-    # sanitize_tex_file(output_dir, "model.tex")    
-    #TK: csv_to_html(data_location)
+    
+    #data_location = os.path.join(output_dir, "data")
+    #csv_to_html(data_location)
 
     latex_log = os.path.join(output_dir, "writeup", "%s.log" % topic)
     html_latex_log = l2h.convert_log(latex_log, 
                                     templates.LATEX_LOG_FILE_HEADER,
-                                    settings.settings.CSS_HOTLINK)
+                                    settings.CSS_HOTLINK)
     # write the log file
-    f = open(os.path.join(output_dir, "latex_log.html"), "w")
+    f = open(os.path.join(output_dir, settings.LATEX_HTML_FILE_NAME), "w")
     f.writelines(html_latex_log)
     f.close() 
       
-    report_location = os.path.join(output_dir, "report.html")
+    report_location = os.path.join(output_dir, settings.EXEC_REPORT)
     os.system("%s %s" % (settings.BROWSER, report_location))
     return True    
 

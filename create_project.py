@@ -1,6 +1,5 @@
 import os 
 import sys 
-#sys.path.append("/home/john")
 import templates
 import settings 
 
@@ -25,10 +24,22 @@ def create_file_structure(project_name, project_dir):
     for d in dirs:
         os.makedirs(os.path.join(project_dir, project_name, d))
 
-def create_stub_files(project_name, project_dir): 
-    # (template, name, location) 
+def create_stub_files(project_name, project_dir):
+    """Creates stub files in the target directory. In the files_to_create 
+    list, the ordering is (template, name, location). 
+   """
+    
     files_to_create = [(templates.LATEX_BASE_PAPER % project_name, 
                         "%s.tex" % project_name, 
+                        "writeup"), 
+                       (templates.LATEX_INPUT_FILE, 
+                        "model.tex", 
+                        "writeup"), 
+                       (templates.LATEX_INSITU_START, 
+                        "insitustart.tex", 
+                        "writeup"), 
+                       (templates.LATEX_INSITU_END, 
+                        "insituend.tex", 
                         "writeup"), 
                        (templates.BIBTEX, 
                         "%s.bib" % project_name, 
@@ -50,7 +61,10 @@ def create_stub_files(project_name, project_dir):
                         "code/SQL/"), 
                        (templates.SQLCODE_OUTPUT, 
                         "get_one_plus_one.sql", 
-                        "code/SQL/") 
+                        "code/SQL/"), 
+                       (templates.MATPLOTLIB_EXAMPLE, 
+                        "diagrams.py", 
+                        "code/python/")
                        ]
     for template, file_name, location in files_to_create: 
         f = open(os.path.join(project_dir, project_name, location, file_name), "w")
@@ -68,7 +82,7 @@ if __name__ == '__main__':
     os.chdir(os.path.join(project_dir, project_name))
     #os.system("python make.py")
     print("Doing R build")
-    os.system("python make.py -r")
+    os.system("python make.py -r") 
     print("Doing SQL build")
     #os.system("python make.py -r -g")
 

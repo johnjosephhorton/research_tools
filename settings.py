@@ -10,3 +10,9 @@ R_DB_CONNECT_STRING="""dbname='odw',
                  port = '63333'"""
 SQL_EXECUTION_HISTORY_LOG = "code/SQL/execution_history.log"
 SQL_MAKE_FILE = "code/SQL/sql_make.yaml"
+LATEX_REPLACE_REGEXES =  [r"""insitustart""", r"""insituend"""] 
+ 
+LATEX_HTML_FILE_NAME = "latex_log.html"
+
+EXEC_REPORT = "report.html"
+

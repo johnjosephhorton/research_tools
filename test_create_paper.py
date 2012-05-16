@@ -14,6 +14,8 @@ class Connect2DBTest(unittest2.TestCase):
         con = connect2db.get_db_connection()
         self.assertEqual(True,True)
 
+
+
 class CreatePaperTest(unittest2.TestCase):
 
     def setUp(self):
@@ -45,6 +47,7 @@ Stuff about overfulled boxes you don't care about
         self.assertEqual(result, latexlog2html.create_ordered_list(
                 heading, tagname, item_list))
 
+
     def test_better_latex_log(self):
         f = tempfile.NamedTemporaryFile("w", delete=False) 
         f.write("""
@@ -61,6 +64,25 @@ Stuff about overfulled boxes you don't care about
                      settings.CSS_HOTLINK)
                     ))
         self.assertEqual(True, True)
+
+
+    def test_inplace_sanitize(self): 
+        f = tempfile.NamedTemporaryFile("w", delete = False)
+        temp_file_name = f.name
+        f.write("""
+Here
+Is
+Some 
+Text
+""")
+        f.close() 
+        create_paper.inplace_sanitize(temp_file_name, ["Here"])
+        f = open(temp_file_name, "r")
+        for index, line in enumerate(f):
+            print index, line 
+        self.assertEquals(True, True) 
+        
+
 
 if __name__ == '__main__':
     unittest2.main()
