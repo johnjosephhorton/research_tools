@@ -8,3 +8,5 @@ R_DB_CONNECT_STRING="""dbname='odw',
                  user = 'odw',
                  password ='odw',
                  port = '63333'"""
+SQL_EXECUTION_HISTORY_LOG = "code/SQL/execution_history.log"
+SQL_MAKE_FILE = "code/SQL/sql_make.yaml"

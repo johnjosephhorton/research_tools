@@ -5,7 +5,6 @@ import datetime
 import distutils.dir_util as d 
 import optparse 
 import os
-
 import re
 import shutil
 import subprocess 
@@ -15,16 +14,14 @@ import sys
 
 import settings
 import templates 
-
-sys.path.append(settings.WSD_LOCATION)
-BROWSER = settings.BROWSER
-CSS_HOTLINK = settings.CSS_HOTLINK 
-
-import WritingSmellDetector.wsd as wsd
-import flatex.flatex as flatex 
 import csv2html
 import latexlog2html as l2h
 import connect2db 
+
+# external packages 
+sys.path.append(settings.WSD_LOCATION)
+import WritingSmellDetector.wsd as wsd
+import flatex.flatex as flatex 
 
 def writing_smell(combined_text, output_dir):
     """ 
@@ -66,15 +63,12 @@ def nickname(n):
 
 def tex_to_html(output_dir): 
     """Forms an HTML version of the paper, making each of the inputs a clickable href. 
-       
-       To Do: Add a summmary header at the top 
-              Make the images clickable as well 
-              Add back-buttons? 
-              jquery reveal? 
-   """
+       Following through to plots & figures will take some re-factoring. 
+    """
     tex_input_re = r"""\\input{[^}]*}"""
     tex_input_filename_re = r"""{[^}]*"""
-    tex_files = [c for c in os.listdir(os.path.join(output_dir, "writeup")) if re.search(r'.+\.tex$', c)]
+    tex_files = [c for c in os.listdir(os.path.join(output_dir, "writeup")) 
+                         if re.search(r'.+\.(tex|txt)$', c)]
 
     for filename in tex_files: 
         sink = open(os.path.join(output_dir, "writeup", filename + ".html"), "w")
@@ -124,9 +118,10 @@ def run_group(group, query_location, last_execution_time):
             return True
     return False
 
+
 def get_last_execution_time():
     try:
-        f = open(os.path.join(os.getcwd(), "code", "SQL", "execution_history.log"), "r")
+        f = open(os.path.join(os.getcwd(), settings.SQL_EXECUTION_HISTORY_LOG), "r")
         times = f.readlines()
         if not times: # no lines in the log file 
             return -1.0 
@@ -135,18 +130,15 @@ def get_last_execution_time():
     except IOError: # log filed doesn't exist - treating as if never been run 
         return -1.0
 
-def record_execution_time(): 
-    with open(os.path.join(
-            os.getcwd(), "code", "SQL", "execution_history.log"), "a") as myfile:
+def record_execution_time(input_dir): 
+    with open(os.path.join(input_dir, settings.SQL_EXECUTION_HISTORY_LOG), "a") as myfile:
         myfile.write("%s" % time.time())
         myfile.write("\n")
 
 def make_datasets(input_dir):   
     last_execution_time = get_last_execution_time()
-
-    yaml_file = os.path.join(input_dir, "code", "SQL", "sql_make.yaml")
-    query_plan = yaml.load(open(yaml_file, 'r'))
-    
+    yaml_file = os.path.join(input_dir, settings.SQL_MAKE_FILE)
+    query_plan = yaml.load(open(yaml_file, 'r'))   
     data_location = os.path.join(input_dir, "data")
     query_location = os.path.join(input_dir, "code", "SQL")
 
@@ -168,14 +160,14 @@ def make_datasets(input_dir):
         if group['setup']:
             setup_query_file = os.path.join(query_location, group['setup'])
             setup_query = open(setup_query_file, "r").read()
-            record_execution_time()
+            record_execution_time(input_dir)
             cur.execute(setup_query)
             cur.connection.commit()
         for output_query in group['output']:
             query_file = open(os.path.join(query_location, output_query), "r")
             csv_file = os.path.join(
                 data_location, group_name + "-" + output_query + ".csv")
-            record_execution_time()
+            record_execution_time(input_dir)
             pg_query_to_csv(cur, query_file.read(), csv_file)
              
     return None
@@ -323,7 +315,7 @@ def main(input_dir, output_path, flush, get_data, run_r):
     combined_file = os.path.join(output_dir, "combined_file.tex")
     
     # choking on a non-tex based input. 
-    #flatex.main(base_file, combined_file)
+    flatex.main(base_file, combined_file)
     tex_to_html(output_dir)
 
     seq = ['p','b','p','b','p','p','p']
@@ -338,14 +330,14 @@ def main(input_dir, output_path, flush, get_data, run_r):
     latex_log = os.path.join(output_dir, "writeup", "%s.log" % topic)
     html_latex_log = l2h.convert_log(latex_log, 
                                     templates.LATEX_LOG_FILE_HEADER,
-                                    settings.CSS_HOTLINK)
+                                    settings.settings.CSS_HOTLINK)
     # write the log file
     f = open(os.path.join(output_dir, "latex_log.html"), "w")
     f.writelines(html_latex_log)
     f.close() 
       
     report_location = os.path.join(output_dir, "report.html")
-    os.system("%s %s" % (BROWSER, report_location))
+    os.system("%s %s" % (settings.BROWSER, report_location))
     return True    
 
 if __name__ == '__main__':
