@@ -126,7 +126,7 @@ def run_group(group, query_location, last_execution_time):
 
 def get_last_execution_time():
     try:
-        f = open(os.path.join(os.getcwd(), "code", "sql", "execution_history.log"), "r")
+        f = open(os.path.join(os.getcwd(), "code", "SQL", "execution_history.log"), "r")
         times = f.readlines()
         if not times: # no lines in the log file 
             return -1.0 
@@ -137,18 +137,18 @@ def get_last_execution_time():
 
 def record_execution_time(): 
     with open(os.path.join(
-            os.getcwd(), "code", "sql", "execution_history.log"), "a") as myfile:
+            os.getcwd(), "code", "SQL", "execution_history.log"), "a") as myfile:
         myfile.write("%s" % time.time())
         myfile.write("\n")
 
-def make_datasets():   
+def make_datasets(input_dir):   
     last_execution_time = get_last_execution_time()
 
-    yaml_file = os.path.join(os.getcwd(), "code", "sql", "make.yaml")
+    yaml_file = os.path.join(input_dir, "code", "SQL", "sql_make.yaml")
     query_plan = yaml.load(open(yaml_file, 'r'))
     
-    data_location = os.path.join(os.getcwd(), "data")
-    query_location = os.path.join(os.getcwd(), "code", "sql")
+    data_location = os.path.join(input_dir, "data")
+    query_location = os.path.join(input_dir, "code", "SQL")
 
     groups_to_run = [] 
     for group_name in query_plan['groups']:
@@ -179,6 +179,7 @@ def make_datasets():
             pg_query_to_csv(cur, query_file.read(), csv_file)
              
     return None
+
 
 def sanitize_tex_file(output_dir, tex_filename): 
     """Removes targeted lines from a tex file - useful 
@@ -258,11 +259,11 @@ def get_folder_name(output_path):
         '%Y-%m-%dT%H:%M:%SZ')
     return os.path.join(output_path, folder_name)    
 
-def run_R(): 
-    os.chdir(os.path.join(input_dir, "code/R/"))
-    yaml_file = os.path.join(intput_dir, "r_make.yaml")
+def run_R(input_dir): 
+    yaml_file = os.path.join(input_dir, "code/R", "r_make.yaml")
     execution_plan = yaml.load(open(yaml_file, 'r'))
     r_scripts = execution_plan['scripts']
+    os.chdir(os.path.join(input_dir, "code/R/"))
     for script in r_scripts:
         r_process = subprocess.Popen(['Rscript', script], 
                                      shell=False, 
@@ -282,11 +283,7 @@ def pull_build_products_back_to_input_dir(input_dir, output_dir):
                 shutil.copy(source, destination_input)
                 shutil.copy(source, destination_output)
             except IOError: 
-                print("""Oops - looks like the pdf didn't get built, 
-                         or it got built but the filenames are wrong. 
-                         In any case, check the latex log
-                         in /writeup of the output directory.   
-                 """)
+                print("""PDF Not Built!""")
                 alert = "Paper not created!" 
 
 def all_files_saved(input_dir):
@@ -302,7 +299,7 @@ def all_files_saved(input_dir):
                 bad_files.append(f)                
 
     if not no_bad_files:
-        print("you've got at least one temp file - go save:")
+        print("You've got at least one temp file - go save:")
         for f in bad_files:
             print f 
         return False 
@@ -314,9 +311,9 @@ def main(input_dir, output_path, flush, get_data, run_r):
     topic = os.path.basename(input_dir)
     print("The paper topic is %s" % topic)
 
-    if flush: os.remove(os.path.join(input_dir, "code/sql/execution_history.log"))
-    if get_data: make_datasets()
-    if run_r: run_R() 
+    if flush: os.remove(os.path.join(input_dir, "code/SQL/execution_history.log"))
+    if get_data: make_datasets(input_dir)
+    if run_r: run_R(input_dir) 
 
     output_dir = get_folder_name(output_path)        
     os.mkdir(output_dir)
@@ -324,7 +321,9 @@ def main(input_dir, output_path, flush, get_data, run_r):
     
     base_file = os.path.join(input_dir, "writeup", "%s.tex" % topic)
     combined_file = os.path.join(output_dir, "combined_file.tex")
-    flatex.main(base_file, combined_file)
+    
+    # choking on a non-tex based input. 
+    #flatex.main(base_file, combined_file)
     tex_to_html(output_dir)
 
     seq = ['p','b','p','b','p','p','p']
