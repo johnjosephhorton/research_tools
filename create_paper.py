@@ -65,33 +65,47 @@ def nickname(n):
        to the date time stamp folder to make command line navigation easier."""
     return 'a' if n==0 else ''.join([chr(97 + int(i)) for i in oct(n)[1:]]) 
 
-
-def tex_to_html(output_dir): 
-    """Forms an HTML version of the paper, making each of the inputs a clickable href. 
-       Following through to plots & figures will take some re-factoring. 
+def process_latex_line(line):
+    """Examines each line of latex file and sees if it is a reference to another file (via an input)
+       or to some piece of media (via an \includegraphics. In either case, it adds a <a href=""> link 
+       (and in the case of TeX sources, appends an HTML tag (since to display in a browser, it's 
+       wrapped in <pre> block." 
     """
     tex_input_re = r"""\\input{[^}]*}"""
     tex_input_filename_re = r"""{[^}]*"""
-    tex_files = [c for c in os.listdir(os.path.join(output_dir, "writeup")) 
-                         if re.search(r'.+\.(tex|txt)$', c)]
+    image_file = r"""\\includegraphics\[scale=[0-9]?\.[0-9][0-9]?\]\{[^\}]*\}"""
+    input_match = re.search(tex_input_re, line)
+    if input_match is None:
+        image_match = re.search(image_file, line)
+        if image_match:
+            image_line = image_match.group(0)
+            print image_line
+            image_file = re.search(r"""\{[^\}]+\}""",line).group(0)[1:-1]
+            return '</pre>\includegraphics[scale=XX]{<a href="%s">%s</a>}<pre>' % (image_file, image_file)
+        return line
+    else:
+        matching_line = input_match.group(0)
+        file_inputed = re.search(tex_input_filename_re, 
+                                         line).group(0)[1:]
+        file_postfix = ''
+        if re.search(".+\.tex", file_inputed):
+            file_postfix = '.html' 
+        return '</pre>\input{<a href="%s">%s</a>}<pre>' % (
+            file_inputed + file_postfix, file_inputed)
 
+     
+def tex_to_html(output_dir): 
+    """Forms an HTML version of the paper, making each of the inputs a clickable href. 
+       Following through to plots & figures will take some re-factoring. 
+    """    
+    tex_files = [c for c in os.listdir(os.path.join(output_dir, "writeup")) 
+                         if re.search(r'.+\.tex$', c)]
     for filename in tex_files: 
         sink = open(os.path.join(output_dir, "writeup", filename + ".html"), "w")
         source = open(os.path.join(output_dir, "writeup", filename), "r")
         sink.writelines("<html><pre>")
         for source_line in source:
-            m = re.search(tex_input_re,source_line)
-            if m: 
-                matching_line = m.group(0)
-                file_inputed = re.search(tex_input_filename_re, 
-                                         source_line).group(0)[1:]
-                file_postfix = ''
-                if re.search(".+\.tex", file_inputed):
-                    file_postfix = '.html' 
-                sink.writelines('</pre>\input{<a href="%s">%s</a>}<pre>' % 
-                                (file_inputed + file_postfix, file_inputed))
-            else:
-                sink.writelines(source_line)
+            sink.writelines(process_latex_line(source_line))
         sink.writelines("</pre></html>")
         source.close() 
         sink.close() 
