@@ -85,8 +85,11 @@ def tex_to_html(output_dir):
                 matching_line = m.group(0)
                 file_inputed = re.search(tex_input_filename_re, 
                                          source_line).group(0)[1:]
+                file_postfix = ''
+                if re.search(".+\.tex", file_inputed):
+                    file_postfix = '.html' 
                 sink.writelines('</pre>\input{<a href="%s">%s</a>}<pre>' % 
-                                (file_inputed + '.html', file_inputed))
+                                (file_inputed + file_postfix, file_inputed))
             else:
                 sink.writelines(source_line)
         sink.writelines("</pre></html>")
