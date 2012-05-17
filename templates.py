@@ -166,8 +166,7 @@ function copyToClipboard (text) {
  <li><a href="./submit/%s.pdf" target="_blank">PDF of the paper</a></li> 
  <li><a href="./writeup/%s.tex.html">HTML of tex source</a></li> 
  <li><a href=".">Directory listing</a></li>     
- <li><a href="./data/consolidated_data.html" target="_blank">Data sets</a></li>    
- <li><a href="./combined_file.tex">All LaTeX Stitched Together</a></li>  
+ <li>All LaTeX Stitched Together <a href="./combined_file.tex">(tex)</a><a href="./combined_file.tex.html">(html)</a></li>  
  <li><a href="./%s">LaTeX Log File</a></li>  
  </ul>
  </body> 

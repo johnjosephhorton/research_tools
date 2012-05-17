@@ -95,6 +95,13 @@ def tex_to_html(output_dir):
     return None 
 
 
+def html_wrapper(text):
+    """Wraps some code / latex in pre blocks to make it displayable as a web page"""
+    html_file = "<html><pre>"
+    html_file += text
+    html_file += "</pre></html>"
+    return html_file 
+
 def pg_query_to_csv(cur, query, csv_fn):
     """
     Given cursor cur and query, output the result to csv_fn.
@@ -329,9 +336,15 @@ def main(input_dir, output_path, flush, get_data, run_r, run_py):
     
     base_file = os.path.join(output_dir, "writeup", "%s.tex" % topic)
     combined_file = os.path.join(output_dir, "combined_file.tex")
-    
+        
     # choking on a non-tex based input. 
-    #flatex.main(base_file, combined_file)
+    flatex.main(base_file, combined_file)
+
+    f = open(os.path.join(output_dir, "combined_file.tex.html"), "w")
+    g = open(combined_file, "r")
+    f.write(html_wrapper(g.read()))
+    g.close()
+    f.close() 
     tex_to_html(output_dir)
 
     seq = ['p','b','p','b','p','p','p']

@@ -81,6 +81,12 @@ Text
         for index, line in enumerate(f):
             print index, line 
         self.assertEquals(True, True) 
+
+
+    def test_html_wrap(self):
+        tex = "here"
+        result = "<html><pre>here</pre></html>"
+        self.assertEqual(result, create_paper.html_wrapper(tex))
         
 
 
