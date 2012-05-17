@@ -302,7 +302,7 @@ def all_files_saved(input_dir):
     else:
         return True
 
-def main(input_dir, output_path, flush, get_data, run_r):
+def main(input_dir, output_path, flush, get_data, run_r, run_py):
     assert(all_files_saved(input_dir))
     topic = os.path.basename(input_dir)
     print("The paper topic is %s" % topic)
