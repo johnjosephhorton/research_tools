@@ -327,11 +327,23 @@ def all_files_saved(input_dir):
     else:
         return True
 
+
+def remove_insitu_inputs(output_dir):
+    """Cleans out 'insitu' inputs that are used when 
+    editing subfiles with a WYSIWYG editor.
+    """
+    inputed_tex_files = tex_files = [c for c in 
+                                      os.listdir(os.path.join(output_dir, "writeup")) 
+                         if re.search(r'.+\.tex$', c)]
+    os.chdir(os.path.join(output_dir, "writeup"))   
+    for tex_file in inputed_tex_files: 
+        inplace_sanitize(tex_file, settings.LATEX_REPLACE_REGEXES)    
+    return None 
+
 def main(input_dir, output_path, flush, get_data, run_r, run_py):
     assert(all_files_saved(input_dir))
     topic = os.path.basename(input_dir)
     print("The paper topic is %s" % topic)
-
     if flush: os.remove(os.path.join(input_dir, "code/SQL/execution_history.log"))
     if get_data: make_datasets(input_dir)
     if run_r: run_R(input_dir) 
@@ -342,19 +354,11 @@ def main(input_dir, output_path, flush, get_data, run_r, run_py):
     output_dir = get_folder_name(output_path)        
     os.mkdir(output_dir)
     d.copy_tree(input_dir,output_dir)
-    
-    # for testing purposes - needs to iterate over all .tex files
-    _inputed_tex_files = tex_files = [c for c in os.listdir(os.path.join(output_dir, "writeup")) 
-                         if re.search(r'.+\.tex$', c)]
-    inputed_tex_files = [os.path.join(output_dir, "writeup", c) for c in _inputed_tex_files]
-    for tex_file in inputed_tex_files: 
-        print("Sanitizing file %s" % tex_file)
-        inplace_sanitize(tex_file, settings.LATEX_REPLACE_REGEXES)    
+    remove_insitu_inputs(output_dir)
     
     base_file = os.path.join(output_dir, "writeup", "%s.tex" % topic)
     combined_file = os.path.join(output_dir, "combined_file.tex")
         
-    # choking on a non-tex based input. 
     flatex.main(base_file, combined_file)
 
     f = open(os.path.join(output_dir, "combined_file.tex.html"), "w")
@@ -368,7 +372,7 @@ def main(input_dir, output_path, flush, get_data, run_r, run_py):
     make_pdf(os.path.join(output_dir, "writeup"),topic, seq)
     alert = pull_build_products_back_to_input_dir(input_dir, output_dir)
     make_html_index(output_dir, topic, alert)
-  
+
     # writing_smell(combined_file, dir_name)
     
     #data_location = os.path.join(output_dir, "data")
