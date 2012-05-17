@@ -39,3 +39,6 @@ To Do
 14. Add a reasonable 'gitignore' to the templates 
 15. Show several table examples
 16. Investigate virtualenv-like solutions 
+
+BUGS
+====
