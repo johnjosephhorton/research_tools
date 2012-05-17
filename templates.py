@@ -13,6 +13,8 @@ LATEX_BASE_PAPER = """
 \\usepackage{natbib}
 \\usepackage{rotating}
 \\usepackage{tabularx}
+\\usepackage{amsmath}
+\\usepackage{amslatex}
 
 \\begin{document} 
 
