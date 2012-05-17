@@ -54,7 +54,8 @@ def make_html_index(output_dir, topic, alert=None):
         "<h1> %s </h1>" % alert if alert else "", 
         topic, 
         topic, 
-        settings.LATEX_HTML_FILE_NAME)
+        settings.LATEX_HTML_FILE_NAME, 
+        output_dir)
     file.writelines(template)
     file.close() 
     return None 

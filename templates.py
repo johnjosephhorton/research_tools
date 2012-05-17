@@ -151,7 +151,14 @@ TEMPLATE_HTML_INDEX = """
  <html>
  <head> 
  <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
- </head>
+<script> 
+
+function copyToClipboard (text) {
+  window.prompt ("Copy to clipboard: Ctrl+C, Enter", text);
+}
+
+</script> 
+</head>
  <body>
   %s
  <h1>Resources</h1> 
@@ -164,6 +171,7 @@ TEMPLATE_HTML_INDEX = """
  <li><a href="./%s">LaTeX Log File</a></li>  
  </ul>
  </body> 
+ <button type="button" onClick="copyToClipboard('%s')">Copy directory path</button>
  </html> 
 """
 
