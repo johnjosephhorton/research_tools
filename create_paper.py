@@ -197,6 +197,10 @@ def parse_terminal_input():
                       help="boolean for whether to run r", 
                       default = False)
 
+    parser.add_option("-p", "--run_py", dest="run_py", action="store_true", 
+                      help="boolean for whether to run python", 
+                      default = False)
+
     parser.add_option("-g", "--get_data", dest="get_data", action="store_true", 
                       help="boolean to get the data from odw", 
                       default = False)
@@ -271,9 +275,12 @@ def pull_build_products_back_to_input_dir(input_dir, output_dir):
                 print("""PDF Not Built!""")
                 alert = "Paper not created!" 
 
-def execute_python_scripts(python_dir): 
+def execute_python_scripts(python_dir):
+    """Executes all files in the python directory."""
+    os.chdir(python_dir)
     for f in os.listdir(python_dir):
-        execfile(os.path.join(python_dir, f))
+        if re.search(r'.+\.py$', f):
+            execfile(f)
 
 def all_files_saved(input_dir):
     """Makes sure---before we start doing lots of intense computations---that
@@ -303,9 +310,9 @@ def main(input_dir, output_path, flush, get_data, run_r):
     if flush: os.remove(os.path.join(input_dir, "code/SQL/execution_history.log"))
     if get_data: make_datasets(input_dir)
     if run_r: run_R(input_dir) 
-
-    python_dir = os.path.join(input_dir, "code/python")
-    execute_python_scripts(python_dir)
+    if run_py: 
+        python_dir = os.path.join(input_dir, "code/python")
+        execute_python_scripts(python_dir)
 
     output_dir = get_folder_name(output_path)        
     os.mkdir(output_dir)
