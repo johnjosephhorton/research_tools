@@ -140,7 +140,7 @@ def record_execution_time(input_dir):
         myfile.write("\n")
 
 def make_datasets(input_dir):   
-    last_execution_time = get_last_execution_time(input_dir, settings.SQL_EXECUTION_HISTORY_LOG)
+    last_execution_time = get_last_execution_time(os.path.join(input_dir, settings.SQL_EXECUTION_HISTORY_LOG))
     yaml_file = os.path.join(input_dir, settings.SQL_MAKE_FILE)
     query_plan = yaml.load(open(yaml_file, 'r'))   
     data_location = os.path.join(input_dir, "data")
@@ -323,7 +323,7 @@ def main(input_dir, output_path, flush, get_data, run_r):
     combined_file = os.path.join(output_dir, "combined_file.tex")
     
     # choking on a non-tex based input. 
-    flatex.main(base_file, combined_file)
+    #flatex.main(base_file, combined_file)
     tex_to_html(output_dir)
 
     seq = ['p','b','p','b','p','p','p']

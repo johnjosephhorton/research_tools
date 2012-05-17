@@ -81,8 +81,8 @@ if __name__ == '__main__':
     #print("Doing PDF build")
     os.chdir(os.path.join(project_dir, project_name))
     #os.system("python make.py")
-    print("Doing R build")
-    os.system("python make.py -r") 
+    #print("Doing R build")
+    #os.system("python make.py -r") 
     print("Doing SQL build")
-    #os.system("python make.py -r -g")
+    os.system("python make.py -r -g")
 
