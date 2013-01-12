@@ -14,12 +14,21 @@ LATEX_BASE_PAPER = """
 \\usepackage{rotating}
 \\usepackage{tabularx}
 \\usepackage{amsmath}
-\\usepackage{amslatex}
+\\usepackage{algorithmic} 
+\\usepackage{algorithm2e}
+
+
+\\hypersetup{
+  colorlinks = TRUE,
+  citecolor=blue,
+  linkcolor=red,
+  urlcolor=black
+}
 
 \\begin{document} 
 
 \\title{Here is a really great title}
-\\date{March 30, 2012}
+\\date{\today}
 
 \\author{John J. Horton \\\\ oDesk Research \\& Harvard Kennedy
   School\\footnote{Author contact information, datasets and code are
@@ -27,7 +36,9 @@ LATEX_BASE_PAPER = """
     \\href{http://www.john-joseph-horton.com/}{http://www.john-joseph-horton.com/}.}}
 \\maketitle
 \\begin{abstract}
-  Here is a really great abstract.  
+\\noindent  Here is a really great abstract.  \\newline
+
+\\noindent JEL J01, J24, J3
 \\end{abstract} 
 
 \\section{Introduction}
