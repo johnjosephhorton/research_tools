@@ -1,4 +1,4 @@
-BROWSER = 'google-chrome' 
+BROWSER = 'firefox' 
 RESEARCH_TOOL_LOCATION = '/home/john/'
 WSD_LOCATION = '/home/john/'
 CSS_HOTLINK = "http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css"

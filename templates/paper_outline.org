@@ -1,0 +1,383 @@
+* Topic Selection 
+**** Advice Checks - Importance 
+***** Will leaders in the field think about the world in a new way? 
+If you are working on an empirical topic, again it is not sufficient to do something that is 
+new. You have to convince us it is important. Taking someone else’s regression model 
+and adding a new variable that turns out to be statistically significant may be okay for an 
+econometrics exercise, but will it land your paper in a top journal? To start, we have to be 
+sure that you have already met our prior questions that the over all question you address 
+is important and that what you are doing is new. For an empirical paper, we must then 
+ask whether there is good theoretical motivation for the inclusion of the new variable. 
+Are we including it in the regression analysis in an appropriate way? In addition to 
+statistical significance, do we also have “economic significance” – i.e. are the magnitudes 
+economically important. In the end, we are faced with the same question as in theory: 
+After reading your study, will the leading researchers in the field be forced to look at the 
+area in a way differently than they did before and in a way that matters substantively. If 
+yes, then you have a nice paper that you should send to a top journal. If not, then maybe 
+you should think again about the value of the project.
+
+***** Will this work bolster or undermine some way of viewing the world? 
+For those who plan to write in empirics, there are several good reasons to steep yourself 
+in theory. The first is simply because you would like to have your empirical work place 
+some intellectual capital on the line. What views of the world will we affirm or abandon 
+(strengthen or weaken) on the basis of your empirical work? If you do not have an answer 
+to this, then the empirical work will not be very exciting. Yes, sometimes we just want to 
+estimate an elasticity and we can tell a story about why we care about it. If the approach 
+to estimation has some novel and important element, that can be its own justification. 
+Failing this, the excitement in empirical work is to cast doubt on/rule out some views of 
+the world that people might otherwise have maintained. A second reason for reading 
+theory is simply that the more closely your empirical work is tied to the underlying 
+theory, the more convincing will be the resulting estimates
+
+http://www.bus.lsu.edu/hill/writing/kennedy.pdf
+
+***** Is there some government policy we would change if we knew the answer to the question?
+****** If we made the change implied by the paper, what would be the effect on social welfare, in *dollars*?
+**** Would the answer bolster or undermine the policy platform of a major US political party where the two parties are in diagreement? 
+***** Are all the answers to the well-specificed research questions publishable? 
+List the likely answers to the research questions. 
+Are all answers interesting and publishable? 
+If only one of the answers is publishable, it suggests the paper is just a counter-intuitive result type paper---those should probably be avoided. 
+In other words, a precisely estimated zero should be publishable. 
+
+***** Do the results have businss implications? 
+******  Would the high-level manger of a firm change how the firm does business if he or she knew the answer to the question?
+***** Would they organize their teams differently? 
+***** Would they change incentive structures or compensation? 
+***** Would they change their invest in people, technology, capital etc.?
+***** Would they pursue a different business model or strategy? 
+**** Could you create a business using the main idea in the paper? Could it be patented? 
+	  
+***** Does it test some important but largely untested theory from economics or a related discipline? 
+      What theory does it test? 
+      How many citations does the theory paper have? 
+      Do any other papers claim to test that same theory? If so, 5Ws, plus citations.  
+      How can you find theory papers that are in dispute?
+      Probably by finding two theory papers that are of nearly the same vintage that cite each other in a quasi-adverserial way. 
+      Do keyword search for phrases that are likely to suggest controversy - examples: 
+		"unclear why" 
+		"empirical question" 
+		"horse race" 
+		"theoretically ambiguous" 
+		"empirical work is needed" 
+      Find papers that are comments on other papers 
+
+***** Does it speak to some noticed social phenomena that are mysterious or for which the CW is likely wrong? 
+      1. Try doing a Google search "for why..."
+
+***** Has anyone senior in the discipline identified this as an important question? 
+***** Could a laymen accurately predict the results? Would they say "so what?"?  
+**** Note: We could actually do a survey, say on Google Survey to assess this claim. 
+
+***** How many academics will care about the paper because it matters to their own work? 
+    List them by name. 
+
+***** Why hasn't this paper been written already? 
+Some reasonable answer include: 
+The data needed to do the analysis didn't exist 
+Technological change of some kind of making this question more important 
+Theory being tested is new 
+No one has thought of it before, even though paper has long been possible (unlikely) 
+
+***** Is this the very best domain to answer the question? 
+***** Is there a dispute? 
+Comments on Papers 
+Concluding Remarks in recent, important papers 
+Asking people 
+Chicago panel of policy issues (minimum wage etc. - find issues w/ consensus or disagreement)  
+
+***** Do leaders in the field think it is a good idea? 
+Write quick summary of the idea---float it by them. 
+
+
+**** Advice Checks - Fertility 
+***** Where would the paper get a citation in the standard grad text? 
+Does the paper gainsay anything in those books? 
+Confirm anything that seems tenuous?  
+Write the line that cites your paper, in the correct place---does it flow? 
+   
+***** Does the paper answer an unanswered question? 
+Is there anything *surprising* about the results? 
+If they are not surprising, is it because they are dubious "common sense"? 
+
+***** List 5 follow-up projects that one could feasibly do once the questions from this project are answered.
+***** Identify 3 well-known, recent but not yet published (high profile working papers) that would cite your paper if it were written - where would it cite it and how important would the citation be? 
+
+# General critiques---Can be applied to almost every paper, but still need good answers
+1. Who cares? 
+1. Wouldn't this would be better answered in X? 
+1. What does this tell us that we didn't already learn from Y? 
+1. If we generalize from here to X, wouldn't your results go away? 
+1. Why is this surprising? Aren't the results obvious? 
+1. Couldn't the results also be explained by X? 
+1. Why did you use this model instead of the canonical model Z? 
+1. Isn't this just a partial equilibrium result? 
+1. What about the Lucas critique? 
+
+
+# Fertility - Is it likely to start a literature? 
+
+
+1. Does it raise a number of hard-but-open and somewhat tractable research questions? 
+1. Could you use the model for other things? 
+1. If you had to write a one-line sentence as part of a citation, what would that line be? 
+1. Can you make the dataset available and easy to use? 
+1. Does it stake out a position somewhat is likely to disagre with ex ante, before seeing the results? 
+1. What does it *give* authors of other papers? 
+   1. Ideas for research 
+   1. A great quote 
+   1. Justication for some point 
+
+
+* Title 
+**** Advice Checks - Title 
+***** Does the title have high recall on on google scholar? 
+
+***** Is the title long? (longer is better) 
+
+* Keywords 
+**** Advice Checks - Keywords 
+***** Are the keywords valid JEL keywords? 
+***** Have the keywords been researched in JEL? 
+
+* Abstract 
+**** Advice Checks - Abstract 
+***** Is the abstract 100-150 words? 
+***** Does the abstract mention the literature? 
+It should not. 
+***** Does the abstract communicate the one single, novel contribution? 
+
+
+
+* Introduction 
+**** Advice Checks - Introduction 
+***** Does the introduction state the problem, its background and importance
+***** Give the empirical fact behind the main result 
+Don’t just state your conclusion: “My results show that the pecking-order theory is rejected.” 
+Give the fact behind that result. 
+“In a regression of x on y, controlling for z, the coeﬃcient is q.”
+***** Is the first sentence of the paper the paper's central contribution? 
+*Example:* We show that increasing a worker's outside options---
+as measured by the arrival of job offers from other firms---has a positive, causal 
+effect on the worker's wage at their current job: a x% increase in job offers is associated
+with a y% increase in wages. 
+
+***** What is the central and novel contribution of this paper in one paragraph? 
+***** Do results follow the "describe what you do, explain it, compare it to alternatives" 
+***** Could the empirical analysis be re-created by a grad student? 
+
+
+
+* Setting 
+* Experimental Design 
+**** Advice - Experimental Design 
+***** Is there a prospective power calculation? 
+***** Is this a diagram showing flow through the experiment? 
+
+** Sample Selection 
+**** Advice Checks 
+***** Who was eligible for the experiment/to be in the sample? 
+
+** Treatments 
+** Randomization Desgin and Timing 
+* Date Summary and Balance Test 
+**** Advice - Data Summary 
+***** Is there a summary statistics table? 
+***** Is there a table assessing balance? 
+***** Does the summary statistics table tell you how many observations? 
+***** Where did the data come from? How many observations are there. 
+***** Does every important number have standard errors? 
+***** Are there horizontal lines in tables? 
+There should not be. 
+***** Does each table have a complete caption explaining the results? 
+***** Are tables at the end of the document? 
+They should be. 
+***** Where does identification come from? 
+***** Would a non-economist understand why we can do valid causal inference here? 
+***** What data did we drop and why? 
+***** Is the estimation method for every regression present? 
+***** Is the standard error method for every regression present? 
+
+** Data Collection 
+** Datasets Used 
+** Summary Statistics 
+** Internal Validity
+
+* Model 
+**** Advice - Modeling 
+In most papers, the “main result” is empirical. There may be some theory or a model,
+but if you (or the editor!) ask “does this paper expand our knowledge of economic theory?,”
+the answer is “no.” The theory is there to help understand the empirical work. Following
+the rule, then, the theory must be the minimum required for the reader to understand the
+empirical results.
+Do not write a “general” model and then “for the empirical work, we now specialize the
+general shock process to an AR(1), we use only 2 ﬁrms rather than a continuum, we assume
+agents have quadratic utility,” etc. Work out only the specialized model that you actually
+take to data.
+
+Think about the purpose of your model. 
+If you are trying to prove the existence of an effect, it is generally good to start with the simplest, most stripped-down model that will deliver
+your result. 
+Later, you can do extensions to examine how general the result is. There is no need
+to strive for realism in early drafts.
+On the other hand, if you are building a theoretical model for empirical implementation,
+it may be more important to have realistic assumptions, and not to abstract too much from other
+factors. 
+Similarly, if you are trying to prove generality, you may want to make minimal
+assumptions about functional form.
+
+For an "existence of an effect" type of paper, it is useful to think about the following
+questions:
+1. Would it be easier to derive the results in continuous or discrete time?
+2. Can I demonstrate the effect in two or three time periods, or do I need to do an infinitehorizon model?
+3. Are the functional forms for the utility and production functions the ones that make the
+derivations as simple as possible?
+4. If the model involves agents of different types, how many different types are actually
+needed to generate the result?
+
+In general, it is a good idea to explicitly write out the utility function, the production
+function, and if applicable, the timeline of moves, the solution concept (competitive equilibrium,
+Markov Perfect Equilibrium etc.), and the assumption about who has what information when.
+
+** Model Set-up 
+** Analysis 
+** Summary 
+
+* Experimental Results
+
+**** Advice
+***** Does the experiment show the main result? 
+Empirical work
+Start with the main result. 
+Do not do warmup exercises, extensive data description
+(especially of well-known datasets), preliminary estimates, replication of others’ work. 
+Do not motivate the speciﬁcation that worked with all your failures. 
+If any of this is really important, it can come afterwards or in an appendix.
+You will mightily resist this advice. 
+If you can’t follow it, at least do not put anything before the main result that a reader does not need to know in order to understand the main
+result.
+Follow the main result with graphs and tables that give intuition, showing how the main
+result is a robust feature of compelling stylized facts in the data. 
+Follow that with limited responses to potential criticisms and robustness checks. 
+Most of those should end up in your
+web appendix.
+
+Stress and discuss the original; spend no time on standard results. 
+
+1. Describe what economic mechanism caused the dispersion in your right hand variables.
+No, God does not hand us true natural experiments very often.
+
+2. Describe what economic mechanism constitutes the error term. 
+What things other than your right hand variable cause variation in the left hand variable?
+
+3. Hence, explain why you think the error term is uncorrelated with the right hand
+variables in economic terms. 
+There is no way to talk about this crucial assumption unless you have done items 1 and 2!
+
+4. Explain the economics of why your instruments are correlated with the right hand
+variable and not with the error term.
+
+5. Do you understand the difference between an instrument and a control? In regressing
+y on x, when should z be used as an additional variable on the right hand side and
+when should it be an instrument for x?
+
+6. Describe the source of variation in the data that drives your estimates, for every single
+number you present. For example, the underlying facts will be quite different as you
+add fixed eﬀects. With firm ﬁxed effects, the regression coefficient is driven by how
+the variation over time within each ﬁrm. Without firm fixed effects, the coeﬃcient is
+(mostly) driven by variation across ﬁrms at a moment in time.
+
+7. Are you sure you’re looking at a demand curve, not a supply curve? As one way to
+clarify this question, ask “whose behavior are you modeling?”
+Example: Suppose you are interested in how interest rates aﬀect housing demand, so
+you run the number of new loans on interest rates. But maybe when housing demand is
+large for other reasons, demand for mortgages (and other borrowing demand correlated
+with demand for mortgages) drives interest rates up. You implicitly assumed stable
+demand, so that an increase in price would lower quantity. But maybe the data are
+generated by a stable supply, so that increased demand raises the price, or some of
+both. Are you modeling the behavior of house purchasers or the behavior of savers
+(how savings responds to interest rates)?
+
+8. Are you sure causality doesn’t run from y to x, or from z to y and x simultaneously?
+Think of the obvious reverse-causality stories.
+Example: You can also think about the last example as causality: Do interest rates
+cause changes in housing demand or vice versa (or does the overall state of the economy
+cause both to change)?
+
+9. Consider carefully what controls should and should not be in the regression. 
+Most papers have far too many right hand variables. You do not want to include all the
+“determinants” of y on the right hand side.
+
+(a) High R2 is usually bad — it means you ran left shoes = α+β right shoes +γprice
++ error. Right shoes should not be a control!
+
+(b) Don’t run a regression like wage = a + b education + c industry + error. Of
+course, adding industry helps raise the R2, and industry is an important other
+determinant of wage (it was in the error term if you did #2). But the whole point
+of getting an education is to help people move to better industries, not to move
+from assistant burger-ﬂipper to chief burger-flipper.
+
+Give the stylized facts in the data that drive your result, not just estimates and p-values.
+For a good example, look at Fama and French’s 1996 “Multifactor explanations.” 
+In the old style we would need one number: the GRS test. 
+Fama and French show us the expected returns of each portfolio, they show us the beta of each portfolio, and they convince us that
+the pattern of expected returns matches the pattern of betas. 
+This is the most successful factor model of the last 15 years ...even though the GRS test is a disaster! They were
+successful because they showed us the stylized facts in the data.
+
+Explain the economic signiﬁcance of your results. 
+Explain the economic magnitude of the central numbers, not just their statistical signiﬁcance. 
+Especially in large panel data sets even the tiniest of eﬀects is “statistically signiﬁcant.” 
+(And when people show up with the
+usual 2.10 t statistic in large panel data sets, the eﬀect is truly tiny!)
+Of course, every important number should include a standard error.
+
+**** Table Advice 
+
+Each table should have a self-contained caption so that a skimming reader can understand
+the fact presented without having to go searching through the text for things like the deﬁnitions of Greek letters. Don’t go nuts here; some captions are longer than the paper. In my
+opinion, you can leave out details of variable construction and similar items. “Book/market
+ratio” is ﬁne; you don’t have to tell me that you got book values in June from Compustat.
+The goal is to allow a skimming reader to understand the table, not to substitute for the
+detailed documentation that must be in the paper somewhere.
+The caption of a regression table should have the regression equation and the name of
+5the variables, especially the left hand variable.
+No number should appear in a table that is not discussed in the text. You don’t have to
+mention each number separately; “Row 1 of Table 3 shows a u-shaped pattern” is ok. “Table
+5 shows summary statistics” (period) is not ok. If it’s not worth writing about in the text,
+it’s not worth putting in the table.
+Use the correct number of signiﬁcant digits, not whatever the program spits out. 4.56783
+with a standard error of 0.6789 should be 4.6 with a standard error of 0.7. Two to three
+signiﬁcant digits are plenty for almost all economics and ﬁnance applications.
+Use sensible units. Percentages are good. If you can report a number as 2.3 rather than
+0.0000023, that’s usually easier to understand.
+
+
+* Conclusion 
+*Notes*: What has this added to the literature. Where should work go next. Policy implications. 
+
+Thus, conclusions should be short and sweet. Do not restate all of your ﬁndings. One
+statement in the abstract, one in the introduction and once more in the body of the text
+should be enough! You can include a short paragraph or two acknowledging limitations,
+suggesting implications beyond those in the paper. Keep it short though---don’t write your
+grant application here outlining all of your plans for future research. And don’t speculate;
+the reader wants to know your facts not your opinions.
+
+
+* Literature 
+
+
+* Appendices 
+
+Appendices are a great tool. Take that delicious section that has so many insightful
+comments on the literature, the general version of the model, the 57 robustness exercises
+that you did, and dump them in to an appendix. This is a good way to get them out of the
+paper. Eventually you’ll dump them out of the appendix too.
+Seriously, careful authors, referees and critics often want to document that the main result
+is robust to various other ways of doing things. You have to do that, but once you’ve veriﬁed
+that it does not make that much diﬀerence and you’ve found the one best way of doing
+things in your main result, it isn’t worth space in the paper to present all the checks and
+variations. Appendices are a great way to solve this problem, and you can just summarize
+all the things you did in the paper. You can put the appendix on your and the journal’s
+website. (“Bond risk premia” with Monika Piazzesi is an example of a web-appendix gone
+wild.)
