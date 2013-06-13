@@ -18,11 +18,6 @@ import templates
 import csv2html
 import latexlog2html as l2h
 import connect2db 
-
-# external packages 
-
-
-import flatex.flatex as flatex 
     
 def make_html_index(output_dir, topic, alert=None): 
     file = open(os.path.join(output_dir, "report.html"), "w")
@@ -333,24 +328,11 @@ def main(input_dir, output_path, flush, get_data, run_r, run_py):
     remove_insitu_inputs(output_dir)
     
     base_file = os.path.join(output_dir, "writeup", "%s.tex" % topic)
-    combined_file = os.path.join(output_dir, "combined_file.tex")
-        
-    flatex.main(base_file, combined_file)
-
-    f = open(os.path.join(output_dir, "combined_file.tex.html"), "w")
-    g = open(combined_file, "r")
-    f.write(html_wrapper(g.read()))
-    g.close()
-    f.close() 
-    tex_to_html(output_dir)
 
     seq = ['p','b','p','b','p','p','p']
     make_pdf(os.path.join(output_dir, "writeup"),topic, seq)
     alert = pull_build_products_back_to_input_dir(input_dir, output_dir)
     make_html_index(output_dir, topic, alert)
-    
-    #data_location = os.path.join(output_dir, "data")
-    #csv_to_html(data_location)
 
     latex_log = os.path.join(output_dir, "writeup", "%s.log" % topic)
     html_latex_log = l2h.convert_log(latex_log, 
