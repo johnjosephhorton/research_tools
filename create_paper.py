@@ -20,33 +20,9 @@ import latexlog2html as l2h
 import connect2db 
 
 # external packages 
-sys.path.append(settings.WSD_LOCATION)
-import WritingSmellDetector.wsd as wsd
-import flatex.flatex as flatex 
 
-def writing_smell(combined_text, output_dir):
-    """ 
-    Uses the writing smell detector to create an HTML file showing 
-    the problematic writing. 
-    """
-    # this is a kludge work around to accomodate the fact that the 
-    # WSD main routine takes an object as an output (it's the result 
-    # of the command line parsing). 
-    class ArgSimulator(object): 
-        def __init__(self, combined_text, output_dir):
-            self.text = combined_text
-            self.abspath=True
-            self.include_empty=False    
-            self.indent=4 
-            self.no_embed_css=False 
-            self.outfile=os.path.join(output_dir, 'smells.html')
-            self.output_format='html' 
-            self.reftext=False 
-            self.rules=[]
-     
-    args = ArgSimulator(combined_text, output_dir)
-    wsd.main(args)
-    return None 
+
+import flatex.flatex as flatex 
     
 def make_html_index(output_dir, topic, alert=None): 
     file = open(os.path.join(output_dir, "report.html"), "w")
@@ -372,8 +348,6 @@ def main(input_dir, output_path, flush, get_data, run_r, run_py):
     make_pdf(os.path.join(output_dir, "writeup"),topic, seq)
     alert = pull_build_products_back_to_input_dir(input_dir, output_dir)
     make_html_index(output_dir, topic, alert)
-
-    # writing_smell(combined_file, dir_name)
     
     #data_location = os.path.join(output_dir, "data")
     #csv_to_html(data_location)
